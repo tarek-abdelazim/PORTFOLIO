@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tarek Abdelazim Azam — Marketing & Media Buying Specialist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & ROOT ===== */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root {
+  --indigo: #3b1fff;
+  --indigo-light: #6b52ff;
+  --pink: #ff2d78;
+  --cyan: #00e5ff;
+  --amber: #ffb300;
+  --bg: #07070f;
+  --bg2: #0d0d1a;
+  --bg3: #111124;
+  --surface: rgba(255,255,255,0.04);
+  --surface2: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.08);
+  --text: #e8e8f0;
+  --muted: #7a7a9a;
+  --font-head: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: none;
+}
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: linear-gradient(var(--indigo), var(--pink)); border-radius: 10px; }
+
+/* ===== NOISE TEXTURE ===== */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px;
+}
+
+/* ===== CUSTOM CURSOR ===== */
+#cursor-dot { position: fixed; width: 8px; height: 8px; background: var(--cyan); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); box-shadow: 0 0 10px var(--cyan), 0 0 20px var(--cyan); transition: width .2s, height .2s, background .2s; }
+#cursor-ring { position: fixed; width: 36px; height: 36px; border: 1.5px solid rgba(0,229,255,0.5); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: transform 0.12s ease-out, width .3s, height .3s, border-color .3s; }
+body:has(a:hover) #cursor-dot, body:has(button:hover) #cursor-dot { width: 12px; height: 12px; background: var(--pink); box-shadow: 0 0 14px var(--pink); }
+body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring { width: 52px; height: 52px; border-color: rgba(255,45,120,0.6); }
+
+/* ===== LOADING SCREEN ===== */
+#loader {
+  position: fixed; inset: 0; z-index: 99999;
+  background: var(--bg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
+  transition: opacity 0.8s ease, visibility 0.8s;
+}
+#loader.done { opacity: 0; visibility: hidden; }
+.loader-initials {
+  font-family: var(--font-head);
+  font-size: clamp(4rem, 12vw, 8rem);
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--indigo), var(--pink), var(--cyan), var(--amber));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-size: 300%;
+  animation: shimmer-bg 3s linear infinite;
+  letter-spacing: -3px;
+}
+.loader-bar-wrap { width: min(320px, 80vw); height: 3px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+.loader-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--indigo), var(--pink), var(--cyan)); border-radius: 99px; animation: load-fill 2s cubic-bezier(.4,0,.2,1) forwards; }
+.loader-label { font-family: var(--font-head); font-size: .8rem; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); }
+@keyframes load-fill { to { width: 100%; } }
+
+/* ===== PARTICLE CANVAS ===== */
+#particle-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+/* ===== NAVBAR ===== */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 0 clamp(1rem, 5vw, 4rem);
+  height: 72px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(7,7,15,0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  transform: translateY(-100%);
+  animation: nav-drop 0.7s 2.2s cubic-bezier(.16,1,.3,1) forwards;
+}
+@keyframes nav-drop { to { transform: translateY(0); } }
+.nav-logo { font-family: var(--font-head); font-size: 1.2rem; font-weight: 800; letter-spacing: -1px;
+  background: linear-gradient(90deg, var(--indigo-light), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.nav-links { display: flex; gap: 2.5rem; list-style: none; }
+.nav-links a { font-family: var(--font-head); font-size: .85rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); text-decoration: none; position: relative; transition: color .3s; }
+.nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), var(--pink)); border-radius: 2px; transition: width .3s; }
+.nav-links a:hover { color: var(--text); }
+.nav-links a:hover::after { width: 100%; }
+#nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: none; background: none; border: none; padding: 4px; }
+#nav-toggle span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: .3s; }
+
+/* ===== SECTIONS COMMON ===== */
+section { position: relative; z-index: 2; padding: clamp(4rem,10vw,7rem) clamp(1.5rem,6vw,5rem); }
+.section-label { display: inline-flex; align-items: center; gap: .5rem; font-family: var(--font-head); font-size: .75rem; letter-spacing: 4px; text-transform: uppercase; color: var(--cyan); margin-bottom: 1rem; }
+.section-label::before { content: ''; width: 24px; height: 2px; background: var(--cyan); }
+.section-title { font-family: var(--font-head); font-size: clamp(2rem,5vw,3.5rem); font-weight: 800; line-height: 1.1; letter-spacing: -2px; margin-bottom: 3rem; }
+.grad-text { background: linear-gradient(135deg, var(--text) 0%, var(--cyan) 60%, var(--pink) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+/* ===== REVEAL ANIMATIONS ===== */
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
+.reveal.left { transform: translateX(-50px); }
+.reveal.right { transform: translateX(50px); }
+.reveal.visible { opacity: 1; transform: translate(0); }
+
+/* ===== HERO ===== */
+#hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 4rem;
+  padding-top: 120px;
+}
+.hero-left { display: flex; flex-direction: column; gap: 1.5rem; }
+.avail-tag {
+  display: inline-flex; align-items: center; gap: .6rem;
+  background: rgba(0,229,255,0.08); border: 1px solid rgba(0,229,255,0.2);
+  padding: .4rem 1rem; border-radius: 99px;
+  font-family: var(--font-head); font-size: .8rem; letter-spacing: 2px; color: var(--cyan);
+  width: fit-content;
+}
+.avail-dot { width: 7px; height: 7px; background: var(--cyan); border-radius: 50%; animation: pulse-dot 1.5s ease-in-out infinite; }
+@keyframes pulse-dot { 0%,100%{box-shadow:0 0 0 0 rgba(0,229,255,.6);} 50%{box-shadow:0 0 0 6px rgba(0,229,255,0);} }
+.hero-name {
+  font-family: var(--font-head); font-size: clamp(2.8rem,6vw,5.5rem);
+  font-weight: 800; line-height: 1; letter-spacing: -3px;
+  background: linear-gradient(135deg, #ffffff 0%, var(--cyan) 40%, var(--pink) 70%, var(--amber) 100%);
+  background-size: 300%;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  animation: shimmer-bg 6s linear infinite;
+}
+@keyframes shimmer-bg { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
+.hero-sub { font-family: var(--font-head); font-size: clamp(1rem,2vw,1.4rem); color: var(--muted); font-weight: 500; letter-spacing: 1px; }
+.hero-desc { font-size: .95rem; color: var(--muted); max-width: 500px; line-height: 1.8; }
+.hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: .5rem; }
+.btn-primary {
+  padding: .85rem 2rem; border-radius: 12px; border: none; cursor: none;
+  background: linear-gradient(135deg, var(--indigo), var(--pink));
+  color: #fff; font-family: var(--font-head); font-size: .9rem; font-weight: 700;
+  letter-spacing: 1px; transition: transform .2s, box-shadow .2s;
+  box-shadow: 0 8px 32px rgba(59,31,255,.35);
+}
+.btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 16px 40px rgba(59,31,255,.5); }
+.btn-secondary {
+  padding: .85rem 2rem; border-radius: 12px; cursor: none;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text); font-family: var(--font-head); font-size: .9rem; font-weight: 700;
+  letter-spacing: 1px; transition: border-color .2s, background .2s, transform .2s;
+}
+.btn-secondary:hover { border-color: var(--cyan); background: rgba(0,229,255,0.08); transform: translateY(-3px); }
+
+/* 3D FLOATING CARD */
+.hero-right { display: flex; justify-content: center; align-items: center; perspective: 800px; }
+.card-3d-wrap { position: relative; animation: float-card 6s ease-in-out infinite; }
+@keyframes float-card { 0%,100%{transform: translateY(0) rotateX(6deg) rotateY(-6deg);} 50%{transform: translateY(-20px) rotateX(-6deg) rotateY(6deg);} }
+.glow-orb {
+  position: absolute; width: 280px; height: 280px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(59,31,255,0.4), rgba(255,45,120,0.2), transparent 70%);
+  top: 50%; left: 50%; transform: translate(-50%,-50%);
+  filter: blur(40px); animation: orb-pulse 4s ease-in-out infinite;
+}
+@keyframes orb-pulse { 0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.7;} 50%{transform:translate(-50%,-50%) scale(1.2);opacity:1;} }
+.dashed-ring {
+  position: absolute; width: 340px; height: 340px;
+  border: 2px dashed rgba(0,229,255,0.3);
+  border-radius: 50%;
+  top: 50%; left: 50%; transform: translate(-50%,-50%);
+  animation: spin-ring 20s linear infinite;
+}
+.dashed-ring-2 {
+  position: absolute; width: 380px; height: 380px;
+  border: 1px dashed rgba(255,45,120,0.2);
+  border-radius: 50%;
+  top: 50%; left: 50%; transform: translate(-50%,-50%);
+  animation: spin-ring 30s linear infinite reverse;
+}
+@keyframes spin-ring { to { transform: translate(-50%,-50%) rotate(360deg); } }
+.hero-card {
+  position: relative; z-index: 2;
+  width: 280px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 28px;
+  padding: 2.5rem;
+  backdrop-filter: blur(30px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+}
+.card-avatar {
+  width: 90px; height: 90px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--indigo), var(--pink));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-head); font-size: 2rem; font-weight: 800; color: #fff;
+  box-shadow: 0 8px 30px rgba(59,31,255,0.4);
+}
+.card-name { font-family: var(--font-head); font-size: 1rem; font-weight: 700; text-align: center; }
+.card-role { font-size: .8rem; color: var(--cyan); text-align: center; font-weight: 500; }
+.card-divider { width: 100%; height: 1px; background: var(--border); margin: .5rem 0; }
+.card-stats { display: flex; justify-content: space-between; width: 100%; gap: .5rem; }
+.stat-item { display: flex; flex-direction: column; align-items: center; gap: .2rem; }
+.stat-num { font-family: var(--font-head); font-size: 1.4rem; font-weight: 800; background: linear-gradient(90deg, var(--cyan), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.stat-label { font-size: .65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; text-align: center; }
+
+/* ===== MARQUEE ===== */
+.marquee-wrap { position: relative; z-index: 2; overflow: hidden; padding: 1.5rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--bg2); }
+.marquee-track { display: flex; gap: 0; animation: marquee-scroll 40s linear infinite; width: max-content; }
+.marquee-track:hover { animation-play-state: paused; }
+.marquee-item { display: inline-flex; align-items: center; gap: 1rem; padding: 0 2.5rem; white-space: nowrap; font-family: var(--font-head); font-size: .8rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+.marquee-item span { width: 4px; height: 4px; border-radius: 50%; background: var(--pink); flex-shrink: 0; }
+@keyframes marquee-scroll { to { transform: translateX(-50%); } }
+
+/* ===== SKILLS ===== */
+#skills { background: var(--bg2); }
+.skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+.skill-bars-wrap { display: flex; flex-direction: column; gap: 1.5rem; }
+.skill-bar-item { display: flex; flex-direction: column; gap: .5rem; }
+.skill-bar-header { display: flex; justify-content: space-between; }
+.skill-bar-name { font-family: var(--font-head); font-size: .9rem; font-weight: 600; }
+.skill-bar-pct { font-family: var(--font-head); font-size: .85rem; color: var(--cyan); font-weight: 700; }
+.skill-bar-track { height: 6px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; }
+.skill-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--indigo), var(--cyan)); width: 0%; transition: width 1.2s cubic-bezier(.4,0,.2,1); position: relative; overflow: hidden; }
+.skill-bar-fill.animated::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%); animation: bar-shimmer 1.2s 1.2s ease-out forwards; opacity: 0; }
+@keyframes bar-shimmer { 0%{opacity:0;transform:translateX(-100%);} 50%{opacity:1;} 100%{opacity:0;transform:translateX(100%);} }
+.chip-cloud { display: flex; flex-wrap: wrap; gap: .75rem; }
+.chip {
+  padding: .5rem 1.1rem; border-radius: 99px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-family: var(--font-head); font-size: .78rem; font-weight: 600; color: var(--muted);
+  transition: transform .3s, border-color .3s, color .3s, box-shadow .3s;
+  cursor: default;
+}
+.chip:hover { transform: translateY(-5px); border-color: var(--cyan); color: var(--cyan); box-shadow: 0 8px 20px rgba(0,229,255,0.2); }
+.chip.pink:hover { border-color: var(--pink); color: var(--pink); box-shadow: 0 8px 20px rgba(255,45,120,0.2); }
+.chip.amber:hover { border-color: var(--amber); color: var(--amber); box-shadow: 0 8px 20px rgba(255,179,0,0.2); }
+.chip.indigo:hover { border-color: var(--indigo-light); color: var(--indigo-light); box-shadow: 0 8px 20px rgba(107,82,255,0.2); }
+.chips-title { font-family: var(--font-head); font-size: 1rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; font-size: .8rem; }
+
+/* ===== EXPERIENCE ===== */
+#experience { background: var(--bg); }
+.timeline { position: relative; padding-left: 2.5rem; }
+.timeline::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+  background: linear-gradient(180deg, var(--indigo), var(--pink), var(--cyan), var(--amber), var(--indigo));
+  background-size: 100% 300%;
+  animation: timeline-flow 5s linear infinite;
+  border-radius: 2px;
+}
+@keyframes timeline-flow { 0%{background-position:0% 0%;} 100%{background-position:0% 100%;} }
+.timeline-item {
+  position: relative; margin-bottom: 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px; padding: 1.8rem 2rem;
+  transition: transform .3s, box-shadow .3s, border-color .3s;
+}
+.timeline-item::before {
+  content: ''; position: absolute; left: -2.85rem; top: 1.8rem;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--indigo); border: 2px solid var(--cyan);
+  box-shadow: 0 0 10px var(--cyan);
+}
+.timeline-item:hover { transform: translateX(8px); box-shadow: 0 8px 40px rgba(59,31,255,0.2); border-color: rgba(107,82,255,0.4); }
+.timeline-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: .5rem; margin-bottom: .75rem; }
+.timeline-role { font-family: var(--font-head); font-size: 1rem; font-weight: 700; }
+.timeline-company { font-family: var(--font-head); font-size: .85rem; color: var(--cyan); font-weight: 600; margin-bottom: .4rem; }
+.timeline-loc { font-size: .78rem; color: var(--muted); }
+.badge-chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .8rem; }
+.badge { padding: .25rem .75rem; border-radius: 99px; font-size: .7rem; font-family: var(--font-head); font-weight: 600; letter-spacing: .5px; }
+.badge-meta { background: rgba(59,31,255,0.15); color: var(--indigo-light); border: 1px solid rgba(59,31,255,0.3); }
+.badge-google { background: rgba(255,179,0,0.12); color: var(--amber); border: 1px solid rgba(255,179,0,0.25); }
+.badge-tiktok { background: rgba(0,229,255,0.1); color: var(--cyan); border: 1px solid rgba(0,229,255,0.2); }
+.badge-snap { background: rgba(255,235,59,0.1); color: #fff176; border: 1px solid rgba(255,235,59,0.2); }
+.badge-all { background: rgba(255,45,120,0.1); color: var(--pink); border: 1px solid rgba(255,45,120,0.2); }
+.badge-mgr { background: rgba(0,200,83,0.1); color: #69f0ae; border: 1px solid rgba(0,200,83,0.2); }
+.badge-design { background: rgba(255,109,0,0.1); color: #ffab40; border: 1px solid rgba(255,109,0,0.2); }
+
+/* ===== PROJECTS ===== */
+#projects { background: var(--bg2); }
+.projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.project-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px; padding: 2rem;
+  position: relative; overflow: hidden;
+  transition: transform .3s, box-shadow .3s;
+  display: flex; flex-direction: column; gap: 1rem;
+}
+.project-card::before {
+  content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--cyan), var(--pink), transparent);
+  transition: left .5s ease;
+}
+.project-card:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.project-card:hover::before { left: 100%; }
+.proj-emoji { font-size: 2.2rem; line-height: 1; }
+.proj-name { font-family: var(--font-head); font-size: 1.05rem; font-weight: 700; }
+.proj-desc { font-size: .85rem; color: var(--muted); line-height: 1.7; }
+.proj-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: auto; }
+.proj-tag { padding: .2rem .6rem; border-radius: 6px; font-size: .7rem; font-family: var(--font-head); font-weight: 600; background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+
+/* ===== EDUCATION & LANGUAGES ===== */
+#edu-lang { background: var(--bg); }
+.edu-lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+.edu-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 20px; padding: 2rem;
+  display: flex; flex-direction: column; gap: .75rem;
+}
+.edu-icon { width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, var(--indigo), var(--cyan)); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: .5rem; }
+.edu-degree { font-family: var(--font-head); font-size: 1.1rem; font-weight: 700; }
+.edu-inst { font-size: .9rem; color: var(--cyan); }
+.edu-year { font-size: .8rem; color: var(--muted); }
+.lang-cards { display: flex; flex-direction: column; gap: 1.5rem; }
+.lang-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 1.8rem; }
+.lang-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.lang-name { font-family: var(--font-head); font-size: 1.1rem; font-weight: 700; }
+.lang-badge {
+  padding: .3rem .9rem; border-radius: 99px;
+  font-family: var(--font-head); font-size: .75rem; font-weight: 700;
+  background: linear-gradient(135deg, var(--indigo), var(--pink));
+  color: #fff; animation: badge-glow 2s ease-in-out infinite alternate;
+}
+@keyframes badge-glow { from{box-shadow:0 0 8px rgba(59,31,255,.4);} to{box-shadow:0 0 20px rgba(255,45,120,.6);} }
+.lang-bar-track { height: 8px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; }
+.lang-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--indigo), var(--cyan)); width: 0%; transition: width 1.5s cubic-bezier(.4,0,.2,1) 0.3s; }
+
+/* ===== CONTACT ===== */
+#contact { background: var(--bg2); }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+.contact-cards { display: flex; flex-direction: column; gap: 1rem; }
+.contact-card {
+  display: flex; align-items: center; gap: 1rem;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 1.2rem 1.5rem;
+  transition: transform .3s, border-color .3s, box-shadow .3s;
+  text-decoration: none; color: var(--text);
+}
+.contact-card:hover { transform: translateX(10px); border-color: var(--cyan); box-shadow: 0 8px 30px rgba(0,229,255,0.15); }
+.contact-icon {
+  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(59,31,255,0.3), rgba(0,229,255,0.2));
+  border: 1px solid rgba(0,229,255,0.2);
+  display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+}
+.contact-label { font-size: .75rem; color: var(--muted); font-family: var(--font-head); text-transform: uppercase; letter-spacing: 1px; }
+.contact-value { font-family: var(--font-head); font-size: .9rem; font-weight: 600; }
+.contact-avatar-wrap { display: flex; justify-content: center; align-items: center; position: relative; }
+.contact-avatar {
+  width: 140px; height: 140px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--indigo), var(--pink));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-head); font-size: 2.5rem; font-weight: 800; color: #fff;
+  position: relative; z-index: 3;
+  box-shadow: 0 0 40px rgba(59,31,255,0.4);
+}
+.ripple { position: absolute; border-radius: 50%; border: 1.5px solid rgba(59,31,255,0.4); animation: ripple-out 3s ease-out infinite; }
+.ripple:nth-child(1) { width: 160px; height: 160px; animation-delay: 0s; }
+.ripple:nth-child(2) { width: 200px; height: 200px; animation-delay: 1s; }
+.ripple:nth-child(3) { width: 240px; height: 240px; animation-delay: 2s; }
+@keyframes ripple-out { 0%{transform:scale(.7);opacity:.8;} 100%{transform:scale(1);opacity:0;} }
+
+/* ===== FOOTER ===== */
+footer { position: relative; z-index: 2; text-align: center; padding: 2.5rem; border-top: 1px solid var(--border); background: var(--bg); color: var(--muted); font-size: .82rem; font-family: var(--font-head); letter-spacing: 1px; }
+footer strong { color: var(--cyan); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  #hero { grid-template-columns: 1fr; text-align: center; padding-top: 110px; }
+  .hero-left { align-items: center; }
+  .hero-desc { text-align: left; }
+  .hero-right { margin-top: 2rem; }
+  .skills-grid, .edu-lang-grid, .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .projects-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .nav-links { display: none; }
+  #nav-toggle { display: flex; }
+  .nav-links.open { display: flex; flex-direction: column; position: fixed; top: 72px; left: 0; right: 0; background: rgba(7,7,15,0.97); padding: 2rem; border-bottom: 1px solid var(--border); z-index: 999; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .card-3d-wrap { transform: scale(0.85); }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div id="loader">
+  <div class="loader-initials">TAA</div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+  <div class="loader-label">Loading Portfolio</div>
+</div>
+
+<!-- CUSTOM CURSOR -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- PARTICLE CANVAS -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-logo">Tarek Azam</div>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button id="nav-toggle" aria-label="Menu" onclick="document.getElementById('nav-links').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left reveal">
+    <div class="avail-tag">
+      <div class="avail-dot"></div>
+      Available for new projects
+    </div>
+    <h1 class="hero-name">Tarek<br>Abdelazim<br>Azam</h1>
+    <p class="hero-sub">Marketing & Media Buying Specialist</p>
+    <p class="hero-desc">5+ years driving ROI-first ad campaigns across Meta, Google, TikTok, Snapchat — for clients from Egypt to the Gulf and beyond. Bilingual. Full-funnel.</p>
+    <div class="hero-ctas">
+      <a href="#experience" class="btn-primary">View Experience</a>
+      <a href="#contact" class="btn-secondary">Get in Touch</a>
+    </div>
+  </div>
+  <div class="hero-right reveal right">
+    <div class="card-3d-wrap">
+      <div class="glow-orb"></div>
+      <div class="dashed-ring"></div>
+      <div class="dashed-ring-2"></div>
+      <div class="hero-card">
+        <div class="card-avatar">TAA</div>
+        <div class="card-name">Tarek Abdelazim Azam</div>
+        <div class="card-role">Marketing & Media Buyer</div>
+        <div class="card-divider"></div>
+        <div class="card-stats">
+          <div class="stat-item">
+            <div class="stat-num">5+</div>
+            <div class="stat-label">Years Exp.</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">34+</div>
+            <div class="stat-label">Clients</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">8+</div>
+            <div class="stat-label">Countries</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marquee-track"></div>
+</div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">Expertise</div>
+  <h2 class="section-title"><span class="grad-text">Core Skills</span></h2>
+  <div class="skills-grid">
+    <div>
+      <div class="skill-bars-wrap" id="skill-bars">
+        <!-- injected by JS -->
+      </div>
+    </div>
+    <div>
+      <div class="chips-title">Technologies & Platforms</div>
+      <div class="chip-cloud" id="chip-cloud"></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label">Career</div>
+  <h2 class="section-title"><span class="grad-text">Work Experience</span></h2>
+  <div class="timeline" id="timeline">
+    <!-- injected by JS -->
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">Portfolio</div>
+  <h2 class="section-title"><span class="grad-text">Featured Campaigns</span></h2>
+  <div class="projects-grid" id="projects-grid"></div>
+</section>
+
+<!-- EDUCATION & LANGUAGES -->
+<section id="edu-lang">
+  <div class="section-label">Background</div>
+  <h2 class="section-title"><span class="grad-text">Education & Languages</span></h2>
+  <div class="edu-lang-grid">
+    <div>
+      <div style="display:flex;flex-direction:column;gap:1.5rem;" id="edu-cards"></div>
+    </div>
+    <div>
+      <div class="lang-cards" id="lang-cards"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">Connect</div>
+  <h2 class="section-title"><span class="grad-text">Get In Touch</span></h2>
+  <div class="contact-grid">
+    <div class="contact-cards reveal left" id="contact-cards"></div>
+    <div class="contact-avatar-wrap reveal right">
+      <div class="ripple"></div>
+      <div class="ripple"></div>
+      <div class="ripple"></div>
+      <div class="contact-avatar">TAA</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <strong>Tarek Abdelazim Azam</strong> &nbsp;·&nbsp; Marketing & Media Buying Specialist &nbsp;·&nbsp; Egypt &nbsp;·&nbsp; © 2026
+</footer>
+
+<script>
+/* ===== DATA ===== */
+const skills = [
+  { name: 'Meta Ads Manager', pct: 95 },
+  { name: 'Facebook Business Manager', pct: 95 },
+  { name: 'Google Ads', pct: 90 },
+  { name: 'Campaign Planning & Optimization', pct: 92 },
+  { name: 'Budget Allocation & Bidding', pct: 90 },
+  { name: 'Retargeting & Lookalike Audiences', pct: 90 },
+  { name: 'Social Media Management', pct: 90 },
+  { name: 'Google Analytics', pct: 85 },
+  { name: 'TikTok Ads Manager', pct: 85 },
+  { name: 'KPI & ROI Analysis', pct: 88 },
+  { name: 'Content Creation & Strategy', pct: 85 },
+  { name: 'Pixel & Event Tracking', pct: 83 },
+];
+
+const chips = [
+  {t:'Meta Ads',c:'indigo'},{t:'Google Ads',c:'amber'},{t:'TikTok Ads',c:'cyan'},
+  {t:'Snapchat Ads',c:'amber'},{t:'Google Analytics',c:'pink'},{t:'Google Tag Manager',c:'cyan'},
+  {t:'Funnel Marketing',c:'indigo'},{t:'A/B Testing',c:'pink'},{t:'Influencer Marketing',c:'amber'},
+  {t:'Audience Segmentation',c:'cyan'},{t:'Performance Reporting',c:'indigo'},{t:'Excel / Sheets',c:'pink'},
+  {t:'Content Strategy',c:'amber'},{t:'Social Media',c:'cyan'},{t:'Campaign Analysis',c:'indigo'},
+  {t:'Design',c:'pink'},{t:'Team Leadership',c:'amber'},{t:'Marketing Plans',c:'cyan'},
+];
+
+const experiences = [
+  { role:'Marketing Manager', company:'Daman Plus', loc:'Egypt', tags:['meta','google','snap','tiktok','mgr'], desc:'Full-spectrum marketing management across all digital platforms for an Egyptian insurance tech brand.' },
+  { role:'Marketing Manager', company:'Yasmeen Alhumood', loc:'Saudi Arabia', tags:['meta','google','mgr'], desc:'End-to-end marketing management for Gulf-based executive coach — content strategy, paid ads, brand positioning.' },
+  { role:'Marketing Manager', company:'Safer Free Travel', loc:'UAE', tags:['meta','google','snap','tiktok','mgr'], desc:'Led full marketing operations for a UAE travel company across all major ad platforms.' },
+  { role:'Marketing Manager', company:'Sayo Kitchen', loc:'KSA', tags:['meta','google','mgr'], desc:'Marketing management for a Saudi F&B brand driving customer acquisition and retention through paid campaigns.' },
+  { role:'Media Buyer', company:'Alfa Zone Stores', loc:'KSA · Qatar · Kuwait', tags:['meta','google','snap','tiktok','all'], desc:'Multi-country paid media strategy across three Gulf markets — full platform coverage and creative testing.' },
+  { role:'Media Buyer', company:'Artway Agency', loc:'Iraq', tags:['meta','google','snap','tiktok','all'], desc:'Comprehensive media buying across all platforms for a creative agency based in Iraq.' },
+  { role:'Media Buyer', company:'Easy Growth Agency', loc:'Saudi Arabia', tags:['meta','google','snap','tiktok','all'], desc:'Managed paid campaigns on behalf of the agency for multiple client verticals.' },
+  { role:'Media Buyer', company:'Lifescape Company', loc:'UAE', tags:['meta','google','design','all'], desc:'Full-service media buying, visual design, and social media management for a UAE lifestyle brand.' },
+  { role:'Media Buyer', company:'Oryx Company', loc:'Qatar', tags:['meta','google','design'], desc:'Media buying combined with design and social media management for a Qatari brand.' },
+  { role:'Media Buyer / Designer', company:'Creaova Company', loc:'UAE', tags:['meta','google','design'], desc:'Hybrid media buying and design role covering all major social ad platforms.' },
+  { role:'Media Buyer (Google Ads)', company:'Tiyn Store', loc:'Saudi Arabia', tags:['google','design'], desc:'Google Ads-focused media buying with creative design support for a Saudi e-commerce store.' },
+  { role:'Media Buyer', company:'Tobal Clinics', loc:'Saudi Arabia', tags:['meta','google','snap','tiktok','all'], desc:'Healthcare media buying across all platforms — driving patient acquisition for a multi-specialty clinic.' },
+  { role:'Media Buyer', company:'Al Qasim Clinics', loc:'Saudi Arabia', tags:['meta','google','snap','tiktok','all'], desc:'All-platform media buying strategy for a Saudi medical group.' },
+  { role:'Media Buyer (Meta)', company:'DR. Ahmed Fawzy Eye Clinic', loc:'Egypt', tags:['meta'], desc:'Meta Ads management for a specialist ophthalmology clinic in Egypt.' },
+  { role:'Media Buyer', company:'Dawna Clinics', loc:'Saudi Arabia', tags:['meta','google','snap','tiktok','all'], desc:'Full paid media management for a Saudi dermatology and aesthetics clinic chain.' },
+  { role:'Media Buyer', company:'Bunstar Restaurant', loc:'KSA', tags:['meta','google','snap','tiktok','all'], desc:'All-platform media buying for a Saudi restaurant — driving foot traffic and delivery orders.' },
+  { role:'Media Buyer (Snapchat)', company:'Azwaq Eltmoor Store', loc:'Saudi Arabia', tags:['snap'], desc:'Snapchat Ads-focused media buying for a Saudi dates and sweets e-commerce brand.' },
+  { role:'Media Buyer', company:'Travels Group Company', loc:'Georgia', tags:['meta','design'], desc:'Media buying, creative design, and social media management for a Georgia-based travel group.' },
+  { role:'Media Buyer (Meta)', company:'Oacode Agency', loc:'Qatar', tags:['meta'], desc:'Meta Ads management for a Qatari digital agency serving multiple brand clients.' },
+  { role:'Media Buyer / Designer', company:'Jeem Stores', loc:'Saudi Arabia', tags:['google','design'], desc:'Google Ads management plus design services for a Saudi retail chain.' },
+  { role:'Media Buyer', company:'Smart Almanasah', loc:'Saudi Arabia', tags:['meta','google','snap','tiktok','all'], desc:'All-platform media buying for a Saudi events and occasions services brand.' },
+  { role:'Media Buyer', company:'Ayla Agency', loc:'Egypt', tags:['meta','google','snap','tiktok','all'], desc:'Full platform media buying for an Egyptian marketing agency.' },
+  { role:'Media Buyer (Meta)', company:'Jahbath Academy', loc:'Oman', tags:['meta'], desc:'Meta Ads campaigns for an Omani online education academy.' },
+  { role:'Media Buyer', company:'SYD Company', loc:'Saudi Arabia', tags:['meta','google','mgr'], desc:'Marketing strategy development and multi-platform media buying for a Saudi brand.' },
+  { role:'Media Buyer (Google Ads)', company:'Habt Fn Store', loc:'Saudi Arabia', tags:['google'], desc:'Google Ads media buying for a Saudi art-supply e-commerce store.' },
+  { role:'Media Buyer', company:'Swedish Academy / Gym', loc:'Tunisia', tags:['meta','google'], desc:'Media buying campaigns for a Tunisian fitness and language academy.' },
+];
+
+const projects = [
+  { emoji:'🌍', name:'Safer Free Travel — UAE Marketing Strategy', desc:'Managed full marketing across all platforms as Marketing Manager. Drove brand awareness and bookings for a UAE-based travel company targeting Arabic-speaking tourists.', tags:['Meta Ads','Google Ads','TikTok','Snapchat','Content Strategy'] },
+  { emoji:'🎙️', name:'Yasmeen Alhumood Coaching Brand', desc:'Built a 40-day cross-platform content strategy and executed paid campaigns for a Gulf executive coach with a flagship 11-week program targeting Arabic-speaking professionals.', tags:['Meta Ads','Content Strategy','Instagram','Podcast','Funnel Marketing'] },
+  { emoji:'🌐', name:'Alfa Zone Multi-Country Campaign', desc:'Orchestrated simultaneous paid media across KSA, Qatar, and Kuwait for a retail chain — unified strategy, localized creatives, real-time budget reallocation.', tags:['Meta Ads','Google Ads','Snapchat','TikTok','Multi-Market'] },
+  { emoji:'🏥', name:'Healthcare Clinics Acquisition Drive', desc:'Managed patient acquisition campaigns across Tobal, Dawna, Al Qasim, and Dr. Ayman Altabaa — covering dermatology, ophthalmology, and general clinics in Egypt and KSA.', tags:['Meta Ads','Google Ads','Healthcare','Retargeting','ROI Analysis'] },
+  { emoji:'🚀', name:'Daman Plus — Egypt Insurance Tech', desc:'Ran full-scope marketing management for an Egyptian InsurTech brand — campaign strategy, creative production oversight, performance reporting, and platform management.', tags:['Meta Ads','Google Ads','TikTok','Snapchat','Marketing Management'] },
+  { emoji:'✈️', name:'Travels Group — Georgia Inbound Tourism', desc:'Developed and executed a cross-platform paid media and social strategy for a Georgia-based travel group targeting Gulf and MENA tourists — full creative and media package.', tags:['Meta Ads','Social Media','Design','Content','Tourism Marketing'] },
+];
+
+const education = [
+  { icon:'🦷', degree:'Bachelor of Dental Surgery (BDS)', inst:'Faculty of Dentistry — Egypt', year:'Graduated 2019+' },
+  { icon:'📊', degree:'Digital Marketing & Media Buying (Self-Directed)', inst:'Hands-on client work since 2019', year:'2019 — Present' },
+];
+
+const languages = [
+  { name:'Arabic', pct:95, level:'Native / Fluent' },
+  { name:'English', pct:85, level:'Professional Proficiency' },
+];
+
+const contactInfo = [
+  { icon:'📧', label:'Email', value:'tarekabdelazim0900@gmail.com', href:'mailto:tarekabdelazim0900@gmail.com' },
+  { icon:'📞', label:'Phone', value:'+201274751990', href:'tel:+201274751990' },
+  { icon:'📍', label:'Location', value:'Egypt', href:'#' },
+  { icon:'🌐', label:'Portfolio', value:'Mostaql · Behance', href:'#' },
+  { icon:'💼', label:'LinkedIn', value:'linkedin account', href:'#' },
+  { icon:'🟢', label:'Status', value:'Open to new projects', href:'#' },
+];
+
+const companies = ['Oryx (Qatar)','SYD (KSA)','Swedish Academy (Tunisia)','Creaova (UAE)','Tiyn Store (KSA)','Smart Almanasah (KSA)','Lifescape (UAE)','Oacode Agency (Qatar)','Bannor Oud (KSA)','Travels Group (Georgia)','Jeem Stores (KSA)','Safer Free Travel','Bunstar Restaurant (KSA)','Tobal Clinics (KSA)','Easy Growth Agency (KSA)','Jahbath Academy (Oman)','Ayla Agency (Egypt)','DR. Ahmed Fawzy Eye Clinic','Dawna Clinics (KSA)','Al Qasim Clinics (KSA)','Alfa Zone (KSA · Qatar · Kuwait)','Azwaq Eltmoor (KSA)','Deka Store (KSA)','Billion Cars (Oman)','Goal Store (KSA)','Sayo Kitchen','Yasmeen Alhumood (KSA)','Artway Agency (Iraq)','Daman Plus (Egypt)'];
+
+/* ===== LOADER ===== */
+window.addEventListener('load', () => {
+  setTimeout(() => { document.getElementById('loader').classList.add('done'); }, 2200);
+});
+
+/* ===== CURSOR ===== */
+const dot = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx+'px'; dot.style.top = my+'px'; });
+(function animRing() { rx += (mx - rx) * 0.14; ry += (my - ry) * 0.14; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(animRing); })();
+
+/* ===== PARTICLES ===== */
+(function() {
+  const c = document.getElementById('particle-canvas');
+  const ctx = c.getContext('2d');
+  let W, H, particles = [];
+  const COUNT = 80;
+  const COLORS = ['#3b1fff','#ff2d78','#00e5ff','#ffb300','#6b52ff'];
+  function resize() { W = c.width = window.innerWidth; H = c.height = window.innerHeight; }
+  window.addEventListener('resize', resize); resize();
+  for (let i = 0; i < COUNT; i++) particles.push({
+    x: Math.random()*1800, y: Math.random()*1000,
+    vx: (Math.random()-.5)*.4, vy: (Math.random()-.5)*.4,
+    r: Math.random()*2+1, col: COLORS[Math.floor(Math.random()*COLORS.length)]
+  });
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = p.col; ctx.globalAlpha = 0.6; ctx.fill();
+      for (let j = i+1; j < particles.length; j++) {
+        const q = particles[j];
+        const dx = p.x-q.x, dy = p.y-q.y, dist = Math.sqrt(dx*dx+dy*dy);
+        if (dist < 130) {
+          ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y);
+          ctx.strokeStyle = p.col; ctx.globalAlpha = (1-dist/130)*0.18;
+          ctx.lineWidth = 1; ctx.stroke();
+        }
+      }
+      ctx.globalAlpha = 1;
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ===== MARQUEE ===== */
+const track = document.getElementById('marquee-track');
+const all = [...companies, ...companies];
+all.forEach(c => {
+  const el = document.createElement('div');
+  el.className = 'marquee-item';
+  el.innerHTML = `<span></span>${c}<span></span>`;
+  track.appendChild(el);
+});
+
+/* ===== SKILL BARS ===== */
+const barsContainer = document.getElementById('skill-bars');
+skills.forEach(s => {
+  const item = document.createElement('div'); item.className = 'skill-bar-item reveal';
+  item.innerHTML = `<div class="skill-bar-header"><span class="skill-bar-name">${s.name}</span><span class="skill-bar-pct">${s.pct}%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-pct="${s.pct}"></div></div>`;
+  barsContainer.appendChild(item);
+});
+
+/* ===== CHIP CLOUD ===== */
+const cloud = document.getElementById('chip-cloud');
+chips.forEach(({t,c}) => {
+  const el = document.createElement('div');
+  el.className = `chip ${c}`;
+  el.textContent = t;
+  cloud.appendChild(el);
+});
+
+/* ===== TIMELINE ===== */
+const tagMap = { meta:'badge-meta', google:'badge-google', tiktok:'badge-tiktok', snap:'badge-snap', all:'badge-all', mgr:'badge-mgr', design:'badge-design' };
+const tagLabel = { meta:'Meta Ads', google:'Google Ads', tiktok:'TikTok', snap:'Snapchat', all:'All Platforms', mgr:'Marketing Mgr', design:'Design' };
+const timeline = document.getElementById('timeline');
+experiences.forEach(e => {
+  const item = document.createElement('div'); item.className = 'timeline-item reveal';
+  const badges = e.tags.map(t => `<span class="badge ${tagMap[t]}">${tagLabel[t]}</span>`).join('');
+  item.innerHTML = `<div class="timeline-header"><div><div class="timeline-role">${e.role}</div><div class="timeline-company">${e.company}</div></div><div class="timeline-loc">${e.loc}</div></div><div style="font-size:.85rem;color:var(--muted);line-height:1.7;">${e.desc}</div><div class="badge-chips">${badges}</div>`;
+  timeline.appendChild(item);
+});
+
+/* ===== PROJECTS ===== */
+const pgrid = document.getElementById('projects-grid');
+projects.forEach(p => {
+  const card = document.createElement('div'); card.className = 'project-card reveal';
+  const tags = p.tags.map(t => `<span class="proj-tag">${t}</span>`).join('');
+  card.innerHTML = `<div class="proj-emoji">${p.emoji}</div><div class="proj-name">${p.name}</div><div class="proj-desc">${p.desc}</div><div class="proj-tags">${tags}</div>`;
+  pgrid.appendChild(card);
+});
+
+/* ===== EDUCATION ===== */
+const eduContainer = document.getElementById('edu-cards');
+education.forEach(e => {
+  const card = document.createElement('div'); card.className = 'edu-card reveal';
+  card.innerHTML = `<div class="edu-icon">${e.icon}</div><div class="edu-degree">${e.degree}</div><div class="edu-inst">${e.inst}</div><div class="edu-year">${e.year}</div>`;
+  eduContainer.appendChild(card);
+});
+
+/* ===== LANGUAGES ===== */
+const langContainer = document.getElementById('lang-cards');
+languages.forEach(l => {
+  const card = document.createElement('div'); card.className = 'lang-card reveal';
+  card.innerHTML = `<div class="lang-top"><div class="lang-name">${l.name}</div><div class="lang-badge">${l.level}</div></div><div class="lang-bar-track"><div class="lang-bar-fill" data-pct="${l.pct}"></div></div>`;
+  langContainer.appendChild(card);
+});
+
+/* ===== CONTACT ===== */
+const contactContainer = document.getElementById('contact-cards');
+contactInfo.forEach(c => {
+  const card = document.createElement('a'); card.className = 'contact-card reveal left'; card.href = c.href;
+  card.innerHTML = `<div class="contact-icon">${c.icon}</div><div><div class="contact-label">${c.label}</div><div class="contact-value">${c.value}</div></div>`;
+  contactContainer.appendChild(card);
+});
+
+/* ===== INTERSECTION OBSERVER ===== */
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
+  });
+}, { threshold: 0.12 });
+
+const barObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const fill = e.target;
+      const pct = fill.dataset.pct;
+      fill.style.width = pct + '%';
+      fill.classList.add('animated');
+      barObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+
+// Init reveals after DOM settle
+requestAnimationFrame(() => {
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+  document.querySelectorAll('.skill-bar-fill, .lang-bar-fill').forEach(el => barObs.observe(el));
+});
+</script>
+</body>
+</html>
